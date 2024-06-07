@@ -1,7 +1,5 @@
 package ru.javarush.feoktistov.quest.entity;
 
-import ru.javarush.feoktistov.quest.repository.MyRepository;
-
 import java.util.List;
 
 public class Question {
@@ -10,15 +8,12 @@ public class Question {
     private String questionText;
     private List<Answer> answers;
     private String answerToLose;
-    private boolean isLastQuestion;
 
-    public Question(Long id, String questionText, List<Answer> answers, String answerToLose, boolean isLastQuestion) {
+    public Question(Long id, String questionText, List<Answer> answers, String answerToLose) {
         this.id = id;
         this.questionText = questionText;
         this.answers = answers;
         this.answerToLose = answerToLose;
-        this.isLastQuestion = isLastQuestion;
-
     }
 
     public String getFirstAnswer() {
@@ -28,7 +23,6 @@ public class Question {
     public String getSecondAnswer() {
         return getAnswers().get(1).getAnswerText();
     }
-
 
     public Long getId() {
         return id;
@@ -60,13 +54,5 @@ public class Question {
 
     public void setAnswerToLose(String answerToLose) {
         this.answerToLose = answerToLose;
-    }
-
-    public boolean isLastQuestion() {
-        return isLastQuestion;
-    }
-
-    public void setLastQuestion(boolean lastQuestion) {
-        isLastQuestion = lastQuestion;
     }
 }

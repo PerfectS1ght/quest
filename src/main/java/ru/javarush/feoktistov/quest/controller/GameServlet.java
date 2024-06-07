@@ -1,14 +1,12 @@
 package ru.javarush.feoktistov.quest.controller;
 
 import java.io.*;
-import java.util.List;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import ru.javarush.feoktistov.quest.entity.Question;
-import ru.javarush.feoktistov.quest.repository.MyRepository;
 import ru.javarush.feoktistov.quest.service.GameService;
 
 @WebServlet(name = "gameServlet", value = "/start_game")
@@ -16,8 +14,8 @@ public class GameServlet extends HttpServlet {
     GameService gameService = new GameService();
     private String name;
     private Long id = 1L;
-    private String win = "Победа";
-    private String lose = "Поражение";
+    private final String WIN = "Победа";
+    private final String LOSE = "Поражение";
     private int gamesCounter = 0;
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -30,17 +28,17 @@ public class GameServlet extends HttpServlet {
 
                 gamesCounter++;
                 String answerToLose = gameService.getQuestionById(id - 1).getAnswerToLose();
-                request.setAttribute("title", lose);
+                request.setAttribute("title", LOSE);
                 request.setAttribute("msg", answerToLose);
                 id = 1L;
-                requestDispatcher = request.getRequestDispatcher("WEB-INF/endOfGame.jsp");
+                requestDispatcher = request.getRequestDispatcher("/endOfGame.jsp");
                 requestDispatcher.forward(request, response);
                 return;
             }
             if(id - lastIdFromRep == 1) {
-                request.setAttribute("title", win);
+                request.setAttribute("title", WIN);
                 request.setAttribute("msg", "Тебя вернули домой.");
-                requestDispatcher = request.getRequestDispatcher("WEB-INF/endOfGame.jsp");
+                requestDispatcher = request.getRequestDispatcher("/endOfGame.jsp");
                 requestDispatcher.forward(request, response);
                 id = 1L;
                 gamesCounter++;
@@ -90,6 +88,9 @@ public class GameServlet extends HttpServlet {
         }
 
         name = req.getParameter("name");
+        if(name.isEmpty()) {
+            name = "Олег Ржавый Кардан";
+        }
 
         req.setAttribute("question", question);
         req.setAttribute("firstAnswer", firstAnswer);
@@ -98,7 +99,6 @@ public class GameServlet extends HttpServlet {
         req.setAttribute("name", name);
         req.setAttribute("counter", gamesCounter);
         req.setAttribute("msg", loseAnswer);
-        System.out.println(loseAnswer);
         id++;
 
         requestDispatcher = req.getRequestDispatcher("/game.jsp");
